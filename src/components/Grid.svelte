@@ -15,7 +15,7 @@
 		[2, 0],
 	]
 
-	let snakeBody = snakeInitialBody
+	let snakeBody: typeof snakeInitialBody = JSON.parse(JSON.stringify(snakeInitialBody))
 	let snakeSpeed: number
 	let snakeDirection: [Direction, boolean][] = [[Direction.right, false]]
 	let interval: NodeJS.Timer
@@ -37,7 +37,7 @@
 	const reset = () => {
 		snakeDirection = [[Direction.right, false]]
 		clearInterval(interval)
-		snakeBody = snakeInitialBody
+		snakeBody =  JSON.parse(JSON.stringify(snakeInitialBody))
 	}
 
 	const lost = () => {
