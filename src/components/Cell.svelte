@@ -26,13 +26,11 @@
 	}
 </script>
 
-{#key type}
-	<div style:--cellColor={cellColor} />
-{/key}
+<div style:--cellColor={cellColor} />
 
 <style>
 	div {
+		grid-area: span 1 / span 1;
 		background-color: var(--cellColor);
-    grid-area: span 1 / span 1;
 	}
 </style>

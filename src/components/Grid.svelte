@@ -22,12 +22,13 @@
 	let foodPosition: [number, number]
 
 	$: if ($gameStatus !== GameStatus.playing) {
-		reset()
 		snakeSpeed = 0
 	} else {
 		reset()
 		snakeSpeed = 200
 	}
+
+	$: $gameDificulty && reset()
 
 	const createBoard = (size: number) =>
 		Array.from({ length: size }).map(() => Array.from({ length: size }).map(() => CellType.empty))
@@ -37,17 +38,19 @@
 	const reset = () => {
 		snakeDirection = [[Direction.right, false]]
 		clearInterval(interval)
-		snakeBody =  JSON.parse(JSON.stringify(snakeInitialBody))
+		board = createBoard($gameDificulty)
+		snakeBody = JSON.parse(JSON.stringify(snakeInitialBody))
+		getFoodPosition()
 	}
 
 	const lost = () => {
 		$gameStatus = GameStatus.lost
-		reset()
+		render()
 	}
 
 	const won = () => {
 		$gameStatus = GameStatus.won
-		reset()
+		render()
 	}
 
 	const insertSnake = () => {
@@ -100,9 +103,7 @@
 	const move = () => {
 		const [headX, headY] = snakeBody[snakeBody.length - 1]
 		let newHead: [number, number]
-		console.log(snakeDirection)
 		if (snakeDirection.length > 1 && snakeDirection[0][1]) snakeDirection.shift()
-		console.log(snakeDirection[0][0])
 		switch (snakeDirection[0][0]) {
 			case Direction.up:
 				if (headY === 0) {
@@ -150,15 +151,20 @@
 			return
 		}
 		snakeBody.shift()
+		snakeBody = snakeBody
+	}
+
+	const render = () => {
+		board = createBoard($gameDificulty)
+		insertFood()
+		insertSnake()
 	}
 
 	$: {
 		clearInterval(interval)
 		interval = setInterval(() => {
 			if ($gameStatus !== GameStatus.playing) return
-			board = createBoard($gameDificulty)
-			insertFood()
-			insertSnake()
+			render()
 			move()
 		}, snakeSpeed)
 	}
