@@ -22,7 +22,7 @@
 <div transition:fade class="overlay">
 	{#key $gameStatus}
 		<div transition:fade class="modal">
-			<h2>{message}</h2>
+			<h2 class="primary">{message}</h2>
 			{#if $gameStatus === GameStatus.choosing}
 				<div class="selector">
 					<button
