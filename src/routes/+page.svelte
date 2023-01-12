@@ -28,3 +28,9 @@
 {#if $gameStatus !== GameStatus.playing}
 	<Modal />
 {/if}
+
+<style>
+	:global(body) {
+		overscroll-behavior-y: contain;
+	}
+</style>
