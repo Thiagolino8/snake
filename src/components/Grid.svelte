@@ -26,7 +26,7 @@
 		[2, 0],
 	]
 
-	let snakeBody: typeof snakeInitialBody = JSON.parse(JSON.stringify(snakeInitialBody))
+	let snakeBody: typeof snakeInitialBody = structuredClone(snakeInitialBody)
 	let snakeSpeed: number
 	let snakeDirection: [Direction, boolean][] = [[Direction.right, false]]
 	let interval: NodeJS.Timer
@@ -50,7 +50,7 @@
 		snakeDirection = [[Direction.right, false]]
 		clearInterval(interval)
 		board = createBoard($gameDificulty)
-		snakeBody = JSON.parse(JSON.stringify(snakeInitialBody))
+		snakeBody = structuredClone(snakeInitialBody)
 		getFoodPosition()
 	}
 
