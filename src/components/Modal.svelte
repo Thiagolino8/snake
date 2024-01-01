@@ -3,13 +3,12 @@
 	import { GameDificulty, game, GameStatus } from '../store.svelte.ts'
 
 	let message = $state<string>()
-	let dialog = $state<HTMLDialogElement>()
 
 	$effect(() => {
 		switch (game.status) {
 			case GameStatus.playing:
 				message = 'Lets Go!'
-				return dialog?.close()
+				break
 			case GameStatus.lost:
 				message = 'You lost'
 				break
