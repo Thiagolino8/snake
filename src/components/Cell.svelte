@@ -10,24 +10,14 @@
 <script lang="ts">
 	let { type } = $props<{ type: CellType }>()
 
-	let cellColor = $state<string>()
+	const cellColors = {
+		[CellType.empty]: '#64748b',
+		[CellType.food]: '#f97316',
+		[CellType.body]: '#1e293b',
+		[CellType.head]: '#ef4444',
+	}
 
-	$effect(() => {
-		switch (type) {
-			case CellType.empty:
-				cellColor = '#64748b'
-				break
-			case CellType.food:
-				cellColor = '#f97316'
-				break
-			case CellType.body:
-				cellColor = '#1e293b'
-				break
-			case CellType.head:
-				cellColor = '#ef4444'
-				break
-		}
-	})
+	let cellColor = $derived(cellColors[type])
 </script>
 
 <span style:background-color={cellColor} />

@@ -47,7 +47,7 @@
 	})
 
 	const createBoard = (size: number) =>
-		Array.from({ length: size }).map(() => Array.from({ length: size }).map(() => CellType.empty))
+		Array.from({ length: size }, () => Array.from({ length: size }, () => CellType.empty))
 
 	let board = $state(createBoard(game.dificulty))
 
@@ -83,8 +83,6 @@
 		const boardRow = board[y]
 		if (boardRow) boardRow[x] === CellType.empty ? (foodPosition = [x, y]) : getFoodPosition()
 	}
-
-	getFoodPosition()
 
 	const insertFood = () => {
 		const [x, y] = foodPosition || [0, 0]
@@ -134,29 +132,25 @@
 		switch (snakeDirectionRow[0]) {
 			case Direction.up:
 				if (headY === 0) {
-					lost()
-					return
+					return lost()
 				}
 				newHead = [headX, headY - 1]
 				break
 			case Direction.down:
 				if (headY === game.dificulty - 1) {
-					lost()
-					return
+					return lost()
 				}
 				newHead = [headX, headY + 1]
 				break
 			case Direction.left:
 				if (headX === 0) {
-					lost()
-					return
+					return lost()
 				}
 				newHead = [headX - 1, headY]
 				break
 			case Direction.right:
 				if (headX === game.dificulty - 1) {
-					lost()
-					return
+					return lost()
 				}
 				newHead = [headX + 1, headY]
 				break
@@ -166,18 +160,15 @@
 		const boardRow = board[newHead[1]]
 		if (!boardRow) return
 		if (boardRow[newHead[0]] === CellType.body) {
-			lost()
-			return
+			return lost()
 		}
 		snakeBody.push(newHead)
 		if (boardRow[newHead[0]] === CellType.food) {
 			if (snakeBody.length === game.dificulty ** 2) {
-				won()
-				return
+				return won()
 			}
 			getFoodPosition()
-			snakeSpeed *= 0.99
-			return
+			return (snakeSpeed = ~~(snakeSpeed * 0.99))
 		}
 		snakeBody.shift()
 	}
@@ -188,7 +179,7 @@
 		insertSnake()
 	}
 
-	$effect(() => {
+	$effect.pre(() => {
 		untrack(() => {
 			clearInterval(interval)
 		})
