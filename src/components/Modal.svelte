@@ -5,7 +5,7 @@
 	let message = $state<string>()
 	let dialog = $state<HTMLDialogElement>()
 
-	$effect(() => {
+	$effect.pre(() => {
 		switch (game.status) {
 			case GameStatus.playing:
 				message = 'Lets Go!'
