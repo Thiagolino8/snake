@@ -30,10 +30,10 @@
 	})
 </script>
 
-<div style:background-color={cellColor} />
+<span style:background-color={cellColor} />
 
 <style>
-	div {
+	span {
 		grid-area: span 1 / span 1;
 	}
 </style>

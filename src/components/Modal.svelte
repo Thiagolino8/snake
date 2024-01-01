@@ -3,11 +3,13 @@
 	import { GameDificulty, game, GameStatus } from '../store.svelte.ts'
 
 	let message = $state<string>()
+	let dialog = $state<HTMLDialogElement>()
+
 	$effect(() => {
 		switch (game.status) {
 			case GameStatus.playing:
 				message = 'Lets Go!'
-				break
+				return dialog?.close()
 			case GameStatus.lost:
 				message = 'You lost'
 				break
@@ -18,12 +20,13 @@
 				message = 'Snake Game'
 				break
 		}
+		dialog?.showModal()
 	})
 </script>
+
 {#if game.status !== GameStatus.playing}
-<div transition:fade class="overlay">
-		{#key game.status}
-			<div transition:fade class="modal">
+	<dialog bind:this={dialog} transition:fade class="overlay">
+			<section>
 				<h2 class="primary">{message}</h2>
 				{#if game.status === GameStatus.choosing}
 					<div class="selector">
@@ -51,9 +54,8 @@
 					<button onclick={() => (game.status = GameStatus.choosing)}>Change Dificulty</button>
 					<button onclick={() => (game.status = GameStatus.playing)}>Play again</button>
 				{/if}
-			</div>
-		{/key}
-	</div>
+			</section>
+	</dialog>
 {/if}
 
 <style>
@@ -62,23 +64,30 @@
 		gap: 1rem;
 	}
 
-	.overlay {
+	dialog {
 		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-		background-color: rgba(0, 0, 0, 0.5);
-		display: grid;
-		place-items: center;
-		grid: 1fr;
+		top: 50%;
+		left: 50%;
+		translate: -50% -50%;
+		min-width: 0;
+		min-height: 0;
+		width: fit-content;
+		height: fit-content;
+		background-color: transparent;
+		backdrop-filter: none;
 	}
 
-	.modal {
+	dialog::backdrop {
+		background-color: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(0.25rem);
+	}
+
+	section {
 		grid-area: 1 / -1 / 1 / -1;
 		display: grid;
 		place-items: center;
 		padding: 1rem;
 		border-radius: 0.5rem;
+		gap: 1rem;
 	}
 </style>

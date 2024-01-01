@@ -202,19 +202,19 @@
 
 <svelte:body use:swipe onswipe={(e) => moveInput({ e, key: false })} onkeydown={(e) => moveInput({ e, key: true })} />
 
-<div style:--size={game.dificulty}>
+<section style:--size={game.dificulty}>
 	{#each board as row}
 		{#each row as cell}
 			<Cell type={cell} />
 		{/each}
 	{/each}
-</div>
+</section>
 
 <style>
-	div {
+	section {
 		display: grid;
 		place-content: center;
 		gap: 0.5rem;
-		grid: repeat(var(--size), 1rem) / repeat(var(--size), 1rem);
+		grid: repeat(var(--size), calc(40vmin / var(--size))) / repeat(var(--size), calc(40vmin / var(--size)));
 	}
 </style>

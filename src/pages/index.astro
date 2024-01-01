@@ -2,6 +2,7 @@
 import '@picocss/pico'
 import Grid from '../components/Grid.svelte';
 import Modal from '../components/Modal.svelte';
+import Footer from '../components/Footer.astro';
 ---
 
 <html lang="en">
@@ -15,19 +16,21 @@ import Modal from '../components/Modal.svelte';
 	<body>
 		<Grid client:load />
 		<Modal client:load />
+		<Footer />
 	</body>
 </html>
 
 <style>
-	:root {
-		overscroll-behavior-y: contain;
+	body {
 		background-color: #2c3e50;
 		display: grid;
-		place-content: center;
-		height: 100vh;
+		place-items: center;
+		height: 100dvh;
+		grid-template-rows: 1fr auto;
+		overscroll-behavior: contain;
 	}
 
-	body {
-		overscroll-behavior: contain;
+	:global(*) {
+		margin: 0 !important;
 	}
 </style>
