@@ -1,51 +1,60 @@
 <script lang="ts">
 	import { fade } from 'svelte/transition'
-	import { GameDificulty, gameDificulty, GameStatus, gameStatus } from '../routes/+page.svelte'
+	import { GameDificulty, game, GameStatus } from '../store.svelte.ts'
 
-	let message: string
-	$: switch ($gameStatus) {
-		case GameStatus.playing:
-			message = 'Lets Go!'
-			break
-		case GameStatus.lost:
-			message = 'You lost'
-			break
-		case GameStatus.won:
-			message = 'You won'
-			break
-		case GameStatus.choosing:
-			message = 'Snake Game'
-			break
-	}
+	let message = $state<string>()
+	$effect(() => {
+		switch (game.status) {
+			case GameStatus.playing:
+				message = 'Lets Go!'
+				break
+			case GameStatus.lost:
+				message = 'You lost'
+				break
+			case GameStatus.won:
+				message = 'You won'
+				break
+			case GameStatus.choosing:
+				message = 'Snake Game'
+				break
+		}
+	})
 </script>
-
+{#if game.status !== GameStatus.playing}
 <div transition:fade class="overlay">
-	{#key $gameStatus}
-		<div transition:fade class="modal">
-			<h2 class="primary">{message}</h2>
-			{#if $gameStatus === GameStatus.choosing}
-				<div class="selector">
-					<button
-						class:secondary={$gameDificulty !== GameDificulty.easy}
-						on:click={() => ($gameDificulty = GameDificulty.easy)}>Easy</button
-					>
-					<button
-						class:secondary={$gameDificulty !== GameDificulty.medium}
-						on:click={() => ($gameDificulty = GameDificulty.medium)}>Medium</button
-					>
-					<button
-						class:secondary={$gameDificulty !== GameDificulty.hard}
-						on:click={() => ($gameDificulty = GameDificulty.hard)}>Hard</button
-					>
-				</div>
-				<button on:click={() => ($gameStatus = GameStatus.playing)}>Play</button>
-			{:else}
-				<button on:click={() => ($gameStatus = GameStatus.choosing)}>Change Dificulty</button>
-				<button on:click={() => ($gameStatus = GameStatus.playing)}>Play again</button>
-			{/if}
-		</div>
-	{/key}
-</div>
+		{#key game.status}
+			<div transition:fade class="modal">
+				<h2 class="primary">{message}</h2>
+				{#if game.status === GameStatus.choosing}
+					<div class="selector">
+						<button
+							class:secondary={game.dificulty !== GameDificulty.easy}
+							onclick={() => (game.dificulty = GameDificulty.easy)}
+						>
+							Easy
+						</button>
+						<button
+							class:secondary={game.dificulty !== GameDificulty.medium}
+							onclick={() => (game.dificulty = GameDificulty.medium)}
+						>
+							Medium
+						</button>
+						<button
+							class:secondary={game.dificulty !== GameDificulty.hard}
+							onclick={() => (game.dificulty = GameDificulty.hard)}
+						>
+							Hard
+						</button>
+					</div>
+					<button onclick={() => (game.status = GameStatus.playing)}>Play</button>
+				{:else}
+					<button onclick={() => (game.status = GameStatus.choosing)}>Change Dificulty</button>
+					<button onclick={() => (game.status = GameStatus.playing)}>Play again</button>
+				{/if}
+			</div>
+		{/key}
+	</div>
+{/if}
 
 <style>
 	.selector {
