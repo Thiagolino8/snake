@@ -5,7 +5,7 @@
 	let message = $state<string>()
 	let dialog = $state<HTMLDialogElement>()
 
-	$effect.pre(() => {
+	$effect(() => {
 		switch (game.status) {
 			case GameStatus.playing:
 				message = 'Lets Go!'
@@ -20,12 +20,15 @@
 				message = 'Snake Game'
 				break
 		}
-		dialog?.showModal()
 	})
+
+	const show = (dialog: HTMLDialogElement) => {
+		dialog?.showModal()
+	}
 </script>
 
 {#if game.status !== GameStatus.playing}
-	<dialog bind:this={dialog} transition:fade class="overlay">
+	<dialog use:show transition:fade class="overlay">
 			<section>
 				<h2 class="primary">{message}</h2>
 				{#if game.status === GameStatus.choosing}
