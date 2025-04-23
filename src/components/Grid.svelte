@@ -17,7 +17,7 @@
 		[2, 0],
 	] satisfies [number, number][]
 
-	let snakeBody = $state(structuredClone(snakeInitialBody))
+	let snakeBody = $state(snakeInitialBody)
 	let snakeSpeed = $state<number>(0)
 	let snakeDirection = $state<[Direction, boolean][]>([[Direction.right, false]])
 	let interval: number
@@ -45,7 +45,7 @@
 		snakeDirection = [[Direction.right, false]]
 		clearInterval(interval)
 		board = createBoard(game.dificulty)
-		snakeBody = structuredClone(snakeInitialBody)
+		snakeBody = snakeInitialBody
 		getFoodPosition()
 	}
 
