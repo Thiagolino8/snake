@@ -1,25 +1,15 @@
 <script lang="ts">
-	import { swipe } from 'svelte-gestures'
 	import { game, GameStatus } from '../store.svelte'
 	import Cell, { CellType } from './Cell.svelte'
 	import { untrack } from 'svelte'
 
-	type HandleDirectionProps<T extends boolean> = T extends true
-		? { e: KeyboardEvent; key: T }
-		: {
-				e: CustomEvent<{
-					direction: 'top' | 'bottom' | 'left' | 'right'
-					target: EventTarget
-				}>
-				key: T
-		  }
-
-	enum Direction {
-		up,
-		down,
-		left,
-		right,
-	}
+	const Direction = {
+		up: 'up',
+		down: 'down',
+		left: 'left',
+		right: 'right',
+	} as const
+	type Direction = (typeof Direction)[keyof typeof Direction]
 
 	const snakeInitialBody = [
 		[0, 0],
@@ -90,31 +80,58 @@
 		if (boardRow) boardRow[x] = CellType.food
 	}
 
-	const moveInput = <T extends boolean>({ e, key }: HandleDirectionProps<T>) => {
-		const direction = {
-			up: key ? 'ArrowUp' : 'top',
-			down: key ? 'ArrowDown' : 'bottom',
-			left: key ? 'ArrowLeft' : 'left',
-			right: key ? 'ArrowRight' : 'right',
-		} as const
+	const translateTouch = (e: TouchEvent) => {
+		const x = e.touches[0]?.clientX
+		const y = e.touches[0]?.clientY
+		const screenWidth = window.innerWidth
+		const screenHeight = window.innerHeight
 
+		if (!x || !y) return
+
+		const column = Math.ceil((x / screenWidth) * 3)
+		const row = Math.ceil((y / screenHeight) * 3)
+
+		if (row === 1 && column === 2) return Direction.up
+
+		if (row === 2 && column === 1) return Direction.left
+		if (row === 2 && column === 3) return Direction.right
+
+		if (row === 3 && column === 2) return Direction.down
+		return
+	}
+
+	const translateKeydown = (e: KeyboardEvent) => {
+		switch (e.key) {
+			case 'ArrowUp':
+				return Direction.up
+			case 'ArrowDown':
+				return Direction.down
+			case 'ArrowLeft':
+				return Direction.left
+			case 'ArrowRight':
+				return Direction.right
+		}
+		return
+	}
+
+	const moveInput = (direction?: Direction) => {
 		const snakeDirectionRow = snakeDirection[0]
 		if (!snakeDirectionRow) return
 
-		switch (key ? e.key : e.detail.direction) {
-			case direction.up:
+		switch (direction) {
+			case Direction.up:
 				if (snakeDirectionRow[0] !== Direction.down && snakeDirectionRow[0] !== Direction.up)
 					snakeDirection.push([Direction.up, false])
 				break
-			case direction.down:
+			case Direction.down:
 				if (snakeDirectionRow[0] !== Direction.up && snakeDirectionRow[0] !== Direction.down)
 					snakeDirection.push([Direction.down, false])
 				break
-			case direction.left:
+			case Direction.left:
 				if (snakeDirectionRow[0] !== Direction.right && snakeDirectionRow[0] !== Direction.left)
 					snakeDirection.push([Direction.left, false])
 				break
-			case direction.right:
+			case Direction.right:
 				if (snakeDirectionRow[0] !== Direction.left && snakeDirectionRow[0] !== Direction.right)
 					snakeDirection.push([Direction.right, false])
 				break
@@ -191,7 +208,7 @@
 	})
 </script>
 
-<svelte:body use:swipe onswipe={(e) => moveInput({ e, key: false })} onkeydown={(e) => moveInput({ e, key: true })} />
+<svelte:body ontouchstart={(e) => moveInput(translateTouch(e))} onkeydown={(e) => moveInput(translateKeydown(e))} />
 
 <section style:--size={game.dificulty}>
 	{#each board as row}

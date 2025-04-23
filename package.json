@@ -10,14 +10,14 @@
 		"astro": "astro"
 	},
 	"dependencies": {
-		"@astrojs/check": "^0.3.4",
-		"@astrojs/svelte": "^5.0.3",
-		"@picocss/pico": "^1.5.11",
-		"astro": "^4.0.8",
-		"astro-purgecss": "^4.0.0",
-		"purgecss": "^5.0.0",
-		"svelte": "5.0.0-next.27",
-		"svelte-gestures": "^1.5.2",
-		"typescript": "^5.3.3"
+		"@astrojs/check": "^0.9.4",
+		"@astrojs/svelte": "^7.0.11",
+		"@picocss/pico": "^2.1.1",
+		"astro": "^5.7.5",
+		"astro-purgecss": "^5.2.2",
+		"purgecss": "^7.0.2",
+		"svelte": "5.28.2",
+		"svelte-gestures": "^5.1.4",
+		"typescript": "^5.8.3"
 	}
 }
