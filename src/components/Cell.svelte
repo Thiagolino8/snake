@@ -1,14 +1,15 @@
-<script lang="ts" context="module">
-	export const enum CellType {
-		empty,
-		food,
-		body,
-		head,
-	}
+<script lang="ts" module>
+	export const CellType = {
+		empty: 'empty',
+		food: 'food',
+		body: 'body',
+		head: 'head',
+	} as const
+	export type CellType = (typeof CellType)[keyof typeof CellType]
 </script>
 
 <script lang="ts">
-	let { type } = $props<{ type: CellType }>()
+	let { type }: { type: CellType } = $props()
 
 	const cellColors = {
 		[CellType.empty]: '#64748b',
@@ -20,7 +21,7 @@
 	let cellColor = $derived(cellColors[type])
 </script>
 
-<span style:background-color={cellColor} />
+<span style:background-color={cellColor}></span>
 
 <style>
 	span {

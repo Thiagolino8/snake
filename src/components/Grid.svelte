@@ -39,7 +39,7 @@
 	const createBoard = (size: number) =>
 		Array.from({ length: size }, () => Array.from({ length: size }, () => CellType.empty))
 
-	let board = $state(createBoard(game.dificulty))
+	let board = $state<CellType[][]>(createBoard(game.dificulty))
 
 	const reset = () => {
 		snakeDirection = [[Direction.right, false]]
